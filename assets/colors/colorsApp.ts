@@ -1,8 +1,8 @@
 export const colorsApp = {
-  purple: "#900F63",
-  fuchsia: "#B50D2F",
-  black: "#1B1B1B",
-  gray: "#4B4B4B",
-  light_gray: "#81807C",
-  white: "#E7E7E7",
+  light_gray: "#D9D9D9",
+  white: "#FFFFFF",
+  dark_blue: "#1A1D2E",
+  light_blue: "#5D6EC9",
+  green: "#52C41A",
+  red: "#FF4D4F",
 };

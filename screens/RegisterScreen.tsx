@@ -12,7 +12,11 @@ import users from "../interfaces/users";
 import { RenderCardListContext } from "../contexts/LoginContext";
 import { registerUser } from "../services/userService";
 
-const RegisterScreen = () => {
+type RegisterScreenProps = {
+  setIsInLogin: Function;
+};
+
+const RegisterScreen = ({ setIsInLogin }: RegisterScreenProps) => {
   const [inputUsuario, setInputUsuario] = useState("");
   const [inputPassword, setInputPassword] = useState("");
   const [inputEmail, setInputEmail] = useState("");
@@ -52,27 +56,30 @@ const RegisterScreen = () => {
     }
   };
 
+  const goToLogin = () => {
+    setIsInLogin(true);
+  };
+
   return (
     <View style={styles.container}>
       <Text style={styles.header}>REGISTER</Text>
-      <Text style={styles.welcoming}>WELCOME</Text>
 
       <TextInput
         placeholder="USERNAME"
-        placeholderTextColor={colorsApp.white}
+        placeholderTextColor={colorsApp.red}
         style={styles.inputs}
         onChangeText={handleChangeUsuario}
       ></TextInput>
       <TextInput
         placeholder="EMAIL"
-        placeholderTextColor={colorsApp.white}
+        placeholderTextColor={colorsApp.red}
         style={styles.inputs}
         onChangeText={handleChangeEmail}
       ></TextInput>
       <TextInput
         placeholder="PASSWORD"
         secureTextEntry
-        placeholderTextColor={colorsApp.white}
+        placeholderTextColor={colorsApp.red}
         style={styles.inputs}
         onChangeText={handleChangePassword}
       ></TextInput>
@@ -84,8 +91,16 @@ const RegisterScreen = () => {
       >
         <Text style={styles.butonText}>REGISTER</Text>
       </Pressable>
-
-      <Text style={styles.passwordForgot}>Forgot Password?</Text>
+      <Pressable
+        style={styles.loginLink}
+        accessibilityLabel="Buton para al usuario"
+        onPress={() => goToLogin()}
+      >
+        <Text style={styles.loginText}>
+          Already have an account?{" "}
+          <Text style={styles.logInPhrase}>Log in</Text>
+        </Text>
+      </Pressable>
     </View>
   );
 };
@@ -96,12 +111,22 @@ const styles = StyleSheet.create({
   container: {
     alignItems: "center",
     flex: 1,
-    backgroundColor: colorsApp.black,
+    backgroundColor: colorsApp.white,
     justifyContent: "center",
+  },
+  loginLink: {
+    marginLeft: "5%",
+    marginRight: "38%",
+  },
+  loginText: {
+    color: colorsApp.dark_blue,
+  },
+  logInPhrase: {
+    color: colorsApp.red,
   },
   button: {
     borderRadius: 10,
-    backgroundColor: colorsApp.purple,
+    backgroundColor: colorsApp.dark_blue,
     width: "90%",
     paddingVertical: "5%",
     alignItems: "center",
@@ -114,30 +139,19 @@ const styles = StyleSheet.create({
   header: {
     fontSize: 70,
     fontWeight: "bold",
-    color: colorsApp.white,
+    color: colorsApp.dark_blue,
     marginTop: "-15%",
     textDecorationLine: "underline",
-  },
-  welcoming: {
-    color: colorsApp.white,
-    fontSize: 25,
-    fontWeight: "bold",
-    marginBottom: "8%",
   },
   inputs: {
     borderStyle: "solid",
     borderWidth: 2,
     width: "90%",
     borderRadius: 4,
-    borderColor: colorsApp.purple,
+    borderColor: colorsApp.dark_blue,
     paddingVertical: "2%",
     paddingHorizontal: 20,
     marginBottom: "4%",
-    color: colorsApp.white,
-  },
-  passwordForgot: {
-    color: colorsApp.white,
-    alignSelf: "flex-end",
-    marginRight: 20,
+    color: colorsApp.dark_blue,
   },
 });

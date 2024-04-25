@@ -23,10 +23,7 @@ const HomeScreen = ({
   return !isListRendered ? (
     <View style={styles.container}>
       <Text style={styles.welcome}>WELCOME </Text>
-      <Image
-        source={require("../assets/fox-emoji.png")}
-        style={styles.picture}
-      ></Image>
+
       <Pressable
         style={styles.button}
         accessibilityLabel="Buton para al usuario"
@@ -46,10 +43,6 @@ const HomeScreen = ({
     <View style={styles.container}>
       <Text style={styles.welcome}>WELCOME</Text>
       <Text style={styles.user}>{userName}</Text>
-      <Image
-        source={require("../assets/fox-emoji.png")}
-        style={styles.picture}
-      ></Image>
     </View>
   );
 };
@@ -60,12 +53,12 @@ const styles = StyleSheet.create({
   container: {
     alignItems: "center",
     flex: 1,
-    backgroundColor: colorsApp.black,
+    backgroundColor: colorsApp.white,
     justifyContent: "center",
   },
   button: {
     borderRadius: 10,
-    backgroundColor: colorsApp.purple,
+    backgroundColor: colorsApp.dark_blue,
     width: "90%",
     paddingVertical: "5%",
     alignItems: "center",
@@ -78,13 +71,13 @@ const styles = StyleSheet.create({
   welcome: {
     fontSize: 50,
     fontWeight: "bold",
-    color: colorsApp.white,
+    color: colorsApp.dark_blue,
     marginTop: "-15%",
   },
   user: {
     fontSize: 50,
     fontWeight: "bold",
-    color: colorsApp.white,
+    color: colorsApp.dark_blue,
     marginTop: "-3%",
   },
   picture: {

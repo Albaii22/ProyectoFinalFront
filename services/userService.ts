@@ -1,4 +1,4 @@
-const USERS_API_URL = "http://192.168.1.27:8888/users";
+const USERS_API_URL = "http://192.168.147.18:8888/users";
 const REGISTER_PATH = "/register";
 const LOGIN_PATH = "/login";
 

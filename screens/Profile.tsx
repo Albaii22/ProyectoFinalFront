@@ -1,5 +1,4 @@
 import { StyleSheet, Text, View, Image } from "react-native";
-import { ShowPortfolio } from "../components/ShowPortfolio";
 import React, { useState } from "react";
 import {
   MaterialTopTabNavigationOptions,
@@ -10,38 +9,11 @@ import { colorsApp } from "../assets/colors/colorsApp";
 import { RenderCardListContext } from "../contexts/LoginContext";
 import users from "../interfaces/users";
 
-const Portfolio = () => {
+const Profile = () => {
   const Tab = createMaterialTopTabNavigator();
   let { userName } = React.useContext(RenderCardListContext);
 
-  const TabNavigatorScreenOptions: MaterialTopTabNavigationOptions = {
-    tabBarInactiveTintColor: colorsApp.light_gray,
-    tabBarActiveTintColor: colorsApp.white,
-    tabBarStyle: { backgroundColor: colorsApp.purple },
-    tabBarPressColor: colorsApp.fuchsia,
-    tabBarIndicatorStyle: { backgroundColor: colorsApp.fuchsia },
-  };
-
-  return userName === users[0].nombre ? (
-    <Tab.Navigator
-      initialRouteName={userName}
-      screenOptions={TabNavigatorScreenOptions}
-    >
-      <Tab.Screen name="User info" component={ShowPortfolio} />
-      <Tab.Screen name="User QR" component={QRCodeSection} />
-    </Tab.Navigator>
-  ) : userName === users[1].nombre ? (
-    <View style={styles.container}>
-      <View style={styles.containerMsj}>
-        <Image
-          source={require("../assets/fox-emoji.png")}
-          style={styles.picture}
-        ></Image>
-        <Text style={styles.msgOculto}>Sus</Text>
-      </View>
-      <Text style={styles.nombrecito}>Javier</Text>
-    </View>
-  ) : (
+  return (
     <View style={styles.container}>
       <Text style={styles.nombrecito}>{userName} piensa:</Text>
       <Image
@@ -51,8 +23,7 @@ const Portfolio = () => {
     </View>
   );
 };
-
-export default Portfolio;
+export default Profile;
 
 const styles = StyleSheet.create({
   picture: {
@@ -69,11 +40,11 @@ const styles = StyleSheet.create({
   container: {
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: colorsApp.black,
+    backgroundColor: colorsApp.white,
     flex: 1,
   },
   nombrecito: {
-    color: colorsApp.white,
+    color: colorsApp.dark_blue,
     fontSize: 20,
     fontWeight: "bold",
   },

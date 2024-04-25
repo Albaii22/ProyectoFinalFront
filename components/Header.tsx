@@ -19,7 +19,7 @@ export default Header;
 const styles = StyleSheet.create({
   headerContainer: {
     paddingTop: 45,
-    backgroundColor: colorsApp.purple,
+    backgroundColor: colorsApp.dark_blue,
     width: "100%",
     paddingVertical: 10,
     flexDirection: "row",
