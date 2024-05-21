@@ -4,19 +4,13 @@ import {
   View,
   TextInput,
   Pressable,
-  Alert,
-  Button,
   Modal,
 } from "react-native";
 import React, { useContext, useState } from "react";
 import { colorsApp } from "../assets/colors/colorsApp";
 import { RenderCardListContext } from "../contexts/LoginContext";
 import { LoginUser } from "../services/userService";
-import {
-  NavigationProp,
-  ParamListBase,
-  useNavigation,
-} from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 
 type LoginScreenProps = {
   setIsInLogin: Function;
@@ -155,6 +149,7 @@ const styles = StyleSheet.create({
   containerAlert: {
     marginTop: "90%",
     alignItems: "center",
+    height: "40%",
   },
   alert: {
     backgroundColor: colorsApp.light_gray,

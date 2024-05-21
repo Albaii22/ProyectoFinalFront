@@ -31,14 +31,14 @@ const CustomDrawer = () => {
     drawerActiveBackgroundColor: colorsApp.light_blue,
     drawerInactiveTintColor: colorsApp.light_gray,
     drawerInactiveBackgroundColor: colorsApp.light_blue,
-    drawerType: "front",
+    drawerType: "back",
   };
 
-  let { isListRendered, toggleIsListRendered } = useContext(
+  const { isListRendered, toggleIsListRendered } = useContext(
     RenderCardListContext
   );
 
-  let [isInLogin, setIsInLogin] = useState(true);
+  const [isInLogin, setIsInLogin] = useState(true);
 
   return !isListRendered ? (
     isInLogin ? (
@@ -48,20 +48,21 @@ const CustomDrawer = () => {
     )
   ) : (
     <Drawer.Navigator
-      initialRouteName="Profile"
+      initialRouteName="Home"
       screenOptions={drawerNavigatorScreenOptions}
       backBehavior="initialRoute"
     >
-      <Drawer.Screen
-        name="Profile"
-        component={Profile}
-        options={{ title: "Profile" }}
-      />
       <Drawer.Screen
         name="Home"
         component={HomeScreen}
         options={{ title: "Home" }}
       />
+      <Drawer.Screen
+        name="Profile"
+        component={Profile}
+        options={{ title: "Profile" }}
+      />
+
       <Drawer.Screen
         name="Options"
         component={Options}

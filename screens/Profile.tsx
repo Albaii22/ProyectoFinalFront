@@ -1,25 +1,157 @@
-import { StyleSheet, Text, View, Image } from "react-native";
-import React, { useState } from "react";
 import {
-  MaterialTopTabNavigationOptions,
-  createMaterialTopTabNavigator,
-} from "@react-navigation/material-top-tabs";
-import { QRCodeSection } from "../components/QRCodeSection";
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  TextInput,
+  Pressable,
+  Modal,
+  Alert,
+} from "react-native";
+import React, { useState } from "react";
 import { colorsApp } from "../assets/colors/colorsApp";
 import { RenderCardListContext } from "../contexts/LoginContext";
-import users from "../interfaces/users";
+import { DateTimePickerAndroid } from "@react-native-community/datetimepicker";
 
 const Profile = () => {
-  const Tab = createMaterialTopTabNavigator();
   let { userName } = React.useContext(RenderCardListContext);
+  const [birthdate, setBirthdate] = useState("dd/mm/yyyy");
+  const [text, setText] = useState("");
+  const [actualMsg, setActualMsg] = useState("");
+  const [alertMessage, setAlertMessage] = useState("");
+  const [alertBody, setAlertBody] = useState("");
+
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isEditActive, setIsEditActive] = useState(false);
+
+  const toggleModal = () => {
+    setIsModalVisible(!isModalVisible);
+  };
+  let { toggleIsListRendered } = React.useContext(RenderCardListContext);
+
+  const logOff = () => {
+    alert("Loged off");
+    toggleIsListRendered();
+  };
+
+  const toggleEdit = () => {
+    setIsEditActive(!isEditActive);
+  };
+
+  const handleSaveDate = () => {
+    // Aquí podrías agregar lógica para validar la fecha
+    if (!isValidDate(birthdate)) {
+      setActualMsg("Error");
+      setAlertBody("Fecha no válida. Por favor, usa el formato DD/MM/YYYY.");
+    }
+  };
+
+  const isValidDate = (dateString: string) => {
+    // Verifica que la fecha tenga el formato correcto (DD/MM/YYYY)
+    const regex = /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])\/\d{4}$/;
+    return regex.test(dateString);
+  };
+
+  const saveData = () => {
+    if (text != actualMsg && text != null && isValidDate(birthdate)) {
+      setActualMsg(text);
+      setAlertMessage("Change successfull");
+      setAlertBody("Information changed succesfully");
+      handleSaveDate();
+      toggleModal();
+      setTimeout(() => {
+        setIsModalVisible(false);
+        toggleEdit();
+      }, 1500);
+    } else {
+      setAlertMessage("Error");
+      setAlertBody("Could not change information");
+      handleSaveDate();
+      toggleModal();
+      setTimeout(() => {
+        setIsModalVisible(false);
+      }, 1500);
+    }
+  };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.nombrecito}>{userName} piensa:</Text>
       <Image
-        source={require("../assets/fe.png")}
+        source={require("../assets/def-pfp.jpg")}
         style={styles.picture}
       ></Image>
+      <Text style={styles.name}>{userName}</Text>
+      <View style={styles.containerAboutMe}>
+        <Text style={styles.aboutMe}>About me:</Text>
+        {isEditActive ? (
+          <View style={styles.containerEdit}>
+            <TextInput
+              style={styles.textArea}
+              placeholder={actualMsg}
+              placeholderTextColor="black"
+              multiline={true}
+              numberOfLines={4}
+              onChangeText={(aboutMeMsg) => setText(aboutMeMsg)}
+            />
+            <View style={styles.birthdayContainer}>
+              <Text style={styles.birthdayText}>Birthday: </Text>
+              <TextInput
+                style={styles.birthday}
+                placeholder="DD/MM/YYYY"
+                placeholderTextColor={colorsApp.white}
+                value={birthdate}
+                onChangeText={setBirthdate}
+              />
+            </View>
+            <Pressable
+              style={styles.button}
+              accessibilityLabel="Buton para editar la info del usuario"
+              onPress={() => saveData()}
+            >
+              <Text style={styles.butonText}>Confirm changes</Text>
+            </Pressable>
+            <Pressable
+              style={styles.buttonLogOff}
+              accessibilityLabel="Buton para deslogearse al usuario"
+              onPress={logOff}
+            >
+              <Text style={styles.butonText}>LOG OFF</Text>
+            </Pressable>
+          </View>
+        ) : (
+          <View style={styles.containerEdit}>
+            <Text style={styles.textArea} numberOfLines={4}>
+              {actualMsg}
+            </Text>
+            <View style={styles.birthdayContainer}>
+              <Text style={styles.birthdayText}>Birthday: </Text>
+              <Text style={styles.birthday}>{birthdate}</Text>
+            </View>
+            <Pressable
+              style={styles.button}
+              accessibilityLabel="Buton para editar la info del usuario"
+              onPress={() => toggleEdit()}
+            >
+              <Text style={styles.butonText}>Edit info</Text>
+            </Pressable>
+            <Pressable
+              style={styles.buttonLogOff}
+              accessibilityLabel="Buton para deslogearse al usuario"
+              onPress={logOff}
+            >
+              <Text style={styles.butonText}>LOG OFF</Text>
+            </Pressable>
+          </View>
+        )}
+      </View>
+      <Modal visible={isModalVisible} transparent={true}>
+        <View style={styles.containerAlert}>
+          <View style={styles.alert}>
+            <Text style={styles.alertHeader}>{alertMessage}</Text>
+            <Text style={styles.alertBody}>{alertBody}</Text>
+          </View>
+        </View>
+      </Modal>
     </View>
   );
 };
@@ -28,34 +160,111 @@ export default Profile;
 const styles = StyleSheet.create({
   picture: {
     objectFit: "scale-down",
-    width: "100%",
-    height: "35%",
+    width: "30%",
+    height: "17%",
+    borderRadius: 100,
   },
-  containerMsj: {
-    flexDirection: "row",
+  containerAboutMe: {
+    height: "90%",
     alignItems: "center",
-    height: "10%",
-    marginLeft: "6%",
   },
   container: {
     alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: colorsApp.white,
+    justifyContent: "flex-start",
+    backgroundColor: colorsApp.dark_blue,
     flex: 1,
+    paddingTop: "2%",
   },
-  nombrecito: {
-    color: colorsApp.dark_blue,
-    fontSize: 20,
-    fontWeight: "bold",
+  containerEdit: {
+    height: "100%",
+    alignSelf: "center",
   },
-  msgOculto: {
+  name: {
     color: colorsApp.white,
-    fontSize: 10,
+    fontSize: 30,
     fontWeight: "bold",
+  },
+  textArea: {
+    height: "35%",
+    width: 320,
+    padding: 10,
+    borderColor: "gray",
     borderWidth: 1,
-    borderColor: colorsApp.white,
-    borderRadius: 6,
-    padding: "0.4%",
-    paddingLeft: "0.7%",
+    borderRadius: 15,
+    textAlignVertical: "top",
+    backgroundColor: colorsApp.white,
+  },
+  aboutMe: {
+    color: colorsApp.white,
+    marginBottom: "2%",
+    right: "30%",
+  },
+  button: {
+    borderRadius: 10,
+    backgroundColor: colorsApp.green,
+    paddingVertical: "3%",
+    width: 280,
+    height: 50,
+    alignSelf: "center",
+    alignItems: "center",
+    marginVertical: 20,
+  },
+  butonText: {
+    fontSize: 20,
+    color: colorsApp.white,
+  },
+  buttonLogOff: {
+    borderRadius: 10,
+    backgroundColor: colorsApp.red,
+    paddingVertical: "3%",
+    width: 280,
+    height: 50,
+    alignSelf: "center",
+    alignItems: "center",
+  },
+  birthdayContainer: {
+    flexDirection: "row",
+    width: "100%",
+    alignItems: "center",
+    alignContent: "space-between",
+  },
+  birthdayText: {
+    color: colorsApp.white,
+    marginRight: "15%",
+    fontSize: 20,
+  },
+  birthday: {
+    marginLeft: "12%",
+    color: colorsApp.white,
+    fontSize: 20,
+  },
+  containerAlert: {
+    marginTop: "90%",
+    alignItems: "center",
+    height: "40%",
+  },
+  alert: {
+    backgroundColor: colorsApp.light_gray,
+    borderColor: colorsApp.dark_blue,
+    padding: 20,
+    paddingBottom: "5%",
+    width: "65%",
+    height: "50%",
+    borderRadius: 10,
+    justifyContent: "center",
+  },
+  alertHeader: {
+    marginTop: "5%",
+    fontSize: 25,
+    alignSelf: "center",
+    color: colorsApp.red,
+  },
+  alertBody: {
+    marginTop: "5%",
+    fontSize: 20,
+    paddingBottom: "10%",
+    alignSelf: "center",
+    justifyContent: "center",
+    color: colorsApp.red,
   },
 });

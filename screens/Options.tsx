@@ -1,14 +1,9 @@
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import React, { useContext } from "react";
 import { RenderCardListContext } from "../contexts/LoginContext";
-import { NavigationProp, ParamListBase } from "@react-navigation/native";
 import { colorsApp } from "../assets/colors/colorsApp";
 
-const Options = ({
-  navigation,
-}: {
-  navigation: NavigationProp<ParamListBase>;
-}) => {
+const Options = () => {
   let { toggleIsListRendered } = useContext(RenderCardListContext);
 
   const logOff = () => {
@@ -21,16 +16,16 @@ const Options = ({
       <Pressable
         style={styles.button}
         accessibilityLabel="Buton para deslogearse al usuario"
-        onPress={logOff}
+        // onPress={logOff}
       >
         <Text style={styles.butonText}>Dark mode</Text>
       </Pressable>
       <Pressable
-        style={styles.buttonLogOff}
+        style={styles.buttonChangeLanguage}
         accessibilityLabel="Buton para deslogearse al usuario"
-        onPress={logOff}
+        // onPress={logOff}
       >
-        <Text style={styles.butonLogOffText}>LOG OFF</Text>
+        <Text style={styles.butonText}>Change Language</Text>
       </Pressable>
     </View>
   );
@@ -54,9 +49,9 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     marginTop: "-120%",
   },
-  buttonLogOff: {
+  buttonChangeLanguage: {
     borderRadius: 10,
-    backgroundColor: colorsApp.red,
+    backgroundColor: colorsApp.light_gray,
     width: "90%",
     paddingVertical: "5%",
     alignItems: "center",
@@ -65,9 +60,5 @@ const styles = StyleSheet.create({
   butonText: {
     fontSize: 20,
     color: colorsApp.dark_blue,
-  },
-  butonLogOffText: {
-    fontSize: 20,
-    color: colorsApp.white,
   },
 });

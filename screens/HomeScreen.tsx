@@ -4,47 +4,23 @@ import { colorsApp } from "../assets/colors/colorsApp";
 import { RenderCardListContext } from "../contexts/LoginContext";
 import LoginScreen from "./LoginScreen";
 import { useNavigation } from "@react-navigation/native";
-import { NavigationProp, ParamListBase } from "@react-navigation/native";
+import { NavigationProp } from "@react-navigation/native";
+import { ScrollView } from "react-native-gesture-handler";
 
-const HomeScreen = ({
-  navigation,
-}: {
-  navigation: NavigationProp<ParamListBase>;
-}) => {
+const HomeScreen = () => {
   let { userName, isListRendered } = useContext(RenderCardListContext);
 
-  const goToLogin = () => {
-    navigation.navigate("Login");
-  };
-  const goToRegister = () => {
-    navigation.navigate("Register");
-  };
+  const allMessages = [];
 
-  return !isListRendered ? (
-    <View style={styles.container}>
-      <Text style={styles.welcome}>WELCOME </Text>
+  for (let i = 1; i <= 20; i++) {
+    allMessages.push(
+      <View key={i} style={styles.item}>
+        <Text style={styles.text}>Item {i}</Text>
+      </View>
+    );
+  }
 
-      <Pressable
-        style={styles.button}
-        accessibilityLabel="Buton para al usuario"
-        onPress={goToLogin}
-      >
-        <Text style={styles.butonText}>LOGIN</Text>
-      </Pressable>
-      <Pressable
-        style={styles.button}
-        accessibilityLabel="Buton para al usuario"
-        onPress={goToRegister}
-      >
-        <Text style={styles.butonText}>REGISTER</Text>
-      </Pressable>
-    </View>
-  ) : (
-    <View style={styles.container}>
-      <Text style={styles.welcome}>WELCOME</Text>
-      <Text style={styles.user}>{userName}</Text>
-    </View>
-  );
+  return <ScrollView style={styles.container}>{allMessages}</ScrollView>;
 };
 
 export default HomeScreen;
@@ -56,32 +32,13 @@ const styles = StyleSheet.create({
     backgroundColor: colorsApp.white,
     justifyContent: "center",
   },
-  button: {
-    borderRadius: 10,
-    backgroundColor: colorsApp.dark_blue,
-    width: "90%",
-    paddingVertical: "5%",
-    alignItems: "center",
-    marginVertical: 20,
+  item: {
+    backgroundColor: "#f9c2ff",
+    padding: 20,
+    marginVertical: 8,
+    borderRadius: 5,
   },
-  butonText: {
-    fontSize: 20,
-    color: colorsApp.white,
-  },
-  welcome: {
-    fontSize: 50,
-    fontWeight: "bold",
-    color: colorsApp.dark_blue,
-    marginTop: "-15%",
-  },
-  user: {
-    fontSize: 50,
-    fontWeight: "bold",
-    color: colorsApp.dark_blue,
-    marginTop: "-3%",
-  },
-  picture: {
-    width: "10%",
-    height: "5%",
+  text: {
+    fontSize: 18,
   },
 });

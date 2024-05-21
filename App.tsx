@@ -11,7 +11,6 @@ export default function App() {
   return (
     <View style={styles.appContainer}>
       <LoginChecker>
-        <Header></Header>
         <NavigationContainer>
           <Drawer></Drawer>
           <StatusBar style="auto" />
