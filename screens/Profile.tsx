@@ -12,10 +12,13 @@ import React, { useState } from "react";
 import { colorsApp } from "../assets/colors/colorsApp";
 import { RenderCardListContext } from "../contexts/LoginContext";
 import { DateTimePickerAndroid } from "@react-native-community/datetimepicker";
+import {
+  getUsuarioIdByUsername,
+  updateAboutMe,
+} from "../services/userDataService";
 
 const Profile = () => {
   let { userName } = React.useContext(RenderCardListContext);
-  const [birthdate, setBirthdate] = useState("dd/mm/yyyy");
   const [text, setText] = useState("");
   const [actualMsg, setActualMsg] = useState("");
   const [alertMessage, setAlertMessage] = useState("");
@@ -38,26 +41,21 @@ const Profile = () => {
     setIsEditActive(!isEditActive);
   };
 
-  const handleSaveDate = () => {
-    // Aquí podrías agregar lógica para validar la fecha
-    if (!isValidDate(birthdate)) {
-      setActualMsg("Error");
-      setAlertBody("Fecha no válida. Por favor, usa el formato DD/MM/YYYY.");
-    }
-  };
-
   const isValidDate = (dateString: string) => {
     // Verifica que la fecha tenga el formato correcto (DD/MM/YYYY)
     const regex = /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])\/\d{4}$/;
     return regex.test(dateString);
   };
 
-  const saveData = () => {
-    if (text != actualMsg && text != null && isValidDate(birthdate)) {
+  const saveData = async () => {
+    if (text != actualMsg && text != null) {
       setActualMsg(text);
+      const idUser = await getUsuarioIdByUsername(userName);
+      console.log(idUser);
+
+      updateAboutMe(idUser, text);
       setAlertMessage("Change successfull");
       setAlertBody("Information changed succesfully");
-      handleSaveDate();
       toggleModal();
       setTimeout(() => {
         setIsModalVisible(false);
@@ -66,7 +64,6 @@ const Profile = () => {
     } else {
       setAlertMessage("Error");
       setAlertBody("Could not change information");
-      handleSaveDate();
       toggleModal();
       setTimeout(() => {
         setIsModalVisible(false);
@@ -99,8 +96,6 @@ const Profile = () => {
                 style={styles.birthday}
                 placeholder="DD/MM/YYYY"
                 placeholderTextColor={colorsApp.white}
-                value={birthdate}
-                onChangeText={setBirthdate}
               />
             </View>
             <Pressable
@@ -123,10 +118,6 @@ const Profile = () => {
             <Text style={styles.textArea} numberOfLines={4}>
               {actualMsg}
             </Text>
-            <View style={styles.birthdayContainer}>
-              <Text style={styles.birthdayText}>Birthday: </Text>
-              <Text style={styles.birthday}>{birthdate}</Text>
-            </View>
             <Pressable
               style={styles.button}
               accessibilityLabel="Buton para editar la info del usuario"
@@ -171,7 +162,7 @@ const styles = StyleSheet.create({
   container: {
     alignItems: "center",
     justifyContent: "flex-start",
-    backgroundColor: colorsApp.dark_blue,
+    backgroundColor: colorsApp.black,
     flex: 1,
     paddingTop: "2%",
   },
@@ -192,12 +183,13 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 15,
     textAlignVertical: "top",
+    marginBottom: "15%",
     backgroundColor: colorsApp.white,
   },
   aboutMe: {
     color: colorsApp.white,
     marginBottom: "2%",
-    right: "30%",
+    right: "38%",
   },
   button: {
     borderRadius: 10,
@@ -230,7 +222,7 @@ const styles = StyleSheet.create({
   },
   birthdayText: {
     color: colorsApp.white,
-    marginRight: "15%",
+    marginRight: "19%",
     fontSize: 20,
   },
   birthday: {
@@ -245,7 +237,7 @@ const styles = StyleSheet.create({
   },
   alert: {
     backgroundColor: colorsApp.light_gray,
-    borderColor: colorsApp.dark_blue,
+    borderColor: colorsApp.black,
     padding: 20,
     paddingBottom: "5%",
     width: "65%",

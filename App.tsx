@@ -5,6 +5,7 @@ import Drawer from "./components/Drawer";
 import React from "react";
 import { LoginChecker } from "./providers/LoginChecker";
 import "react-native-gesture-handler";
+import { colorsApp } from "./assets/colors/colorsApp";
 
 export default function App() {
   return (
@@ -22,6 +23,6 @@ export default function App() {
 const styles = StyleSheet.create({
   appContainer: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: colorsApp.black,
   },
 });

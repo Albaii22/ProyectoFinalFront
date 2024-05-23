@@ -18,19 +18,19 @@ const Drawer = createDrawerNavigator();
 const CustomDrawer = () => {
   const drawerNavigatorScreenOptions: DrawerNavigationOptions = {
     headerStyle: {
-      backgroundColor: colorsApp.dark_blue,
+      backgroundColor: colorsApp.pink,
     },
     headerTintColor: colorsApp.white,
     drawerItemStyle: {
       width: "90%",
     },
     drawerStyle: {
-      backgroundColor: colorsApp.dark_blue,
+      backgroundColor: colorsApp.black,
     },
-    drawerActiveTintColor: colorsApp.white,
-    drawerActiveBackgroundColor: colorsApp.light_blue,
-    drawerInactiveTintColor: colorsApp.light_gray,
-    drawerInactiveBackgroundColor: colorsApp.light_blue,
+    drawerActiveTintColor: colorsApp.beige,
+    drawerActiveBackgroundColor: colorsApp.pink,
+    drawerInactiveTintColor: colorsApp.beige,
+    drawerInactiveBackgroundColor: colorsApp.dark_pink,
     drawerType: "back",
   };
 

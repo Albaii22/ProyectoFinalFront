@@ -37,12 +37,12 @@ const styles = StyleSheet.create({
   container: {
     alignItems: "center",
     flex: 1,
-    backgroundColor: colorsApp.white,
+    backgroundColor: colorsApp.black,
     justifyContent: "center",
   },
   button: {
     borderRadius: 10,
-    backgroundColor: colorsApp.light_gray,
+    backgroundColor: colorsApp.pink,
     width: "90%",
     paddingVertical: "5%",
     alignItems: "center",
@@ -51,7 +51,7 @@ const styles = StyleSheet.create({
   },
   buttonChangeLanguage: {
     borderRadius: 10,
-    backgroundColor: colorsApp.light_gray,
+    backgroundColor: colorsApp.pink,
     width: "90%",
     paddingVertical: "5%",
     alignItems: "center",
@@ -59,6 +59,6 @@ const styles = StyleSheet.create({
   },
   butonText: {
     fontSize: 20,
-    color: colorsApp.dark_blue,
+    color: colorsApp.white,
   },
 });

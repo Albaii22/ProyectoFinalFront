@@ -9,7 +9,7 @@ import {
 import React, { useContext, useState } from "react";
 import { colorsApp } from "../assets/colors/colorsApp";
 import { RenderCardListContext } from "../contexts/LoginContext";
-import AuthService from "../services/userService";
+import { loginUser } from "../services/userService";
 import { useNavigation } from "@react-navigation/native";
 
 type LoginScreenProps = {
@@ -47,8 +47,15 @@ const LoginScreen = ({ setIsInLogin }: LoginScreenProps) => {
       email: "",
       password: inputPassword,
     };
-    let codUser = await AuthService.login(user);
-    if (codUser == 200) {
+    let codUser = await loginUser(user.username, user.password);
+    if (user.username === "" || user.password === "") {
+      setAlertMessage("ERROR");
+      setAlertBody("Theres one or more empty inputs");
+      toggleModal();
+      setTimeout(() => {
+        setIsModalVisible(false);
+      }, 2000);
+    } else if (codUser == 200) {
       setUserName(user.username);
       setAlertMessage("Login successful");
       setAlertBody("User " + user.username + " successfully logged in");
@@ -76,14 +83,14 @@ const LoginScreen = ({ setIsInLogin }: LoginScreenProps) => {
 
       <TextInput
         placeholder="USERNAME"
-        placeholderTextColor={colorsApp.red}
+        placeholderTextColor={colorsApp.light_blue}
         style={styles.inputs}
         onChangeText={handleChangeUsuario}
       ></TextInput>
       <TextInput
         placeholder="PASSWORD"
         secureTextEntry
-        placeholderTextColor={colorsApp.red}
+        placeholderTextColor={colorsApp.light_blue}
         style={styles.inputs}
         onChangeText={handleChangePassword}
       ></TextInput>
@@ -126,35 +133,35 @@ const styles = StyleSheet.create({
   container: {
     alignItems: "center",
     flex: 1,
-    backgroundColor: colorsApp.white,
+    backgroundColor: colorsApp.black,
     justifyContent: "center",
   },
   registerLink: {
-    marginLeft: "5%",
-    marginRight: "25%",
+    marginLeft: "-15%",
+    marginRight: "50%",
   },
   registerText: {
-    color: colorsApp.dark_blue,
+    color: colorsApp.pink,
   },
   registerPhrase: {
-    color: colorsApp.red,
+    color: colorsApp.light_blue,
   },
   button: {
     borderRadius: 10,
-    backgroundColor: colorsApp.dark_blue,
+    backgroundColor: colorsApp.pink,
     width: "90%",
     paddingVertical: "5%",
     alignItems: "center",
     marginVertical: 20,
   },
   containerAlert: {
-    marginTop: "90%",
+    marginTop: "60%",
     alignItems: "center",
     height: "40%",
   },
   alert: {
-    backgroundColor: colorsApp.light_gray,
-    borderColor: colorsApp.dark_blue,
+    backgroundColor: colorsApp.beige,
+    borderColor: colorsApp.light_gray,
     padding: 20,
     paddingBottom: "5%",
     width: "65%",
@@ -166,7 +173,7 @@ const styles = StyleSheet.create({
     marginTop: "5%",
     fontSize: 25,
     alignSelf: "center",
-    color: colorsApp.red,
+    color: colorsApp.pink,
   },
   alertBody: {
     marginTop: "5%",
@@ -174,7 +181,7 @@ const styles = StyleSheet.create({
     paddingBottom: "10%",
     alignSelf: "center",
     justifyContent: "center",
-    color: colorsApp.red,
+    color: colorsApp.pink,
   },
   rowButtons: {
     alignContent: "center",
@@ -187,8 +194,9 @@ const styles = StyleSheet.create({
   header: {
     fontSize: 70,
     fontWeight: "bold",
-    color: colorsApp.dark_blue,
+    color: colorsApp.pink,
     marginTop: "-15%",
+    marginBottom: "4%",
     textDecorationLine: "underline",
   },
   inputs: {
@@ -196,14 +204,15 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     width: "90%",
     borderRadius: 4,
-    borderColor: colorsApp.dark_blue,
+    borderColor: colorsApp.pink,
     paddingVertical: "2%",
     paddingHorizontal: 20,
+    marginTop: "4%",
     marginBottom: "4%",
-    color: colorsApp.dark_blue,
+    color: colorsApp.light_blue,
   },
   passwordForgot: {
-    color: colorsApp.dark_blue,
+    color: colorsApp.light_blue,
     alignSelf: "flex-end",
     marginRight: 20,
   },
