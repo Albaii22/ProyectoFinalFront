@@ -13,7 +13,20 @@
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
-      "supportsTablet": true
+      "infoPlist": {
+        "NSAppTransportSecurity": {
+          "NSExceptionDomains": {
+            "example.com": {
+    
+              "NSIncludesSubdomains": true,
+        
+              "NSTemporaryExceptionAllowsInsecureHTTPLoads": true,
+  
+              "NSTemporaryExceptionMinimumTLSVersion": "TLSv1.1"
+            }
+          }
+        }
+      }
     },
     "android": {
       "adaptiveIcon": {

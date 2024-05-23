@@ -4,19 +4,13 @@ import {
   View,
   TextInput,
   Pressable,
-  Alert,
-  Button,
   Modal,
 } from "react-native";
 import React, { useContext, useState } from "react";
 import { colorsApp } from "../assets/colors/colorsApp";
 import { RenderCardListContext } from "../contexts/LoginContext";
-import { LoginUser } from "../services/userService";
-import {
-  NavigationProp,
-  ParamListBase,
-  useNavigation,
-} from "@react-navigation/native";
+import { loginUser } from "../services/userService";
+import { useNavigation } from "@react-navigation/native";
 
 type LoginScreenProps = {
   setIsInLogin: Function;
@@ -36,35 +30,49 @@ const LoginScreen = ({ setIsInLogin }: LoginScreenProps) => {
     setIsModalVisible(!isModalVisible);
   };
 
-  const { toggleIsListRendered, setUserName } = useContext(
-    RenderCardListContext
-  );
+  const { toggleIsListRendered, setUserName } = useContext(RenderCardListContext);
 
   const handleChangeUsuario = (text: string) => {
     setInputUsuario(text);
   };
+
   const handleChangePassword = (text: string) => {
     setInputPassword(text);
   };
 
   const handleLogin = async () => {
     let user = {
-      name: inputUsuario,
+      username: inputUsuario,
       password: inputPassword,
     };
-    let codUser = await LoginUser(user);
-    if (codUser == 200) {
-      setUserName(user.name);
-      setAlertMessage("Login successful");
-      setAlertBody("User " + user.name + " successfully logged in");
-      toggleModal();
-      setTimeout(() => {
+
+    console.log(user);
+    
+    try {
+      const codUser = await loginUser(inputUsuario, inputPassword);
+
+      if (codUser === 200) {
         toggleIsListRendered();
-      }, 1500);
-    } else {
-      setAlertMessage("ERROR");
-      setAlertBody("username or password incorrect");
+        setUserName(user.username);
+        toggleModal();
+        setAlertMessage("Success");
+        setAlertBody("Login Successful");
+        
+        setTimeout(() => {
+          toggleIsListRendered();
+        }, 1500);
+      } else {
+        toggleModal();
+        setAlertMessage("Error");
+        setAlertBody("Login Failed");
+        setTimeout(() => {
+          setIsModalVisible(false);
+        }, 2000);
+      }
+    } catch (error) {
       toggleModal();
+      setAlertMessage("Error");
+      setAlertBody("Error connecting to the server");
       setTimeout(() => {
         setIsModalVisible(false);
       }, 2000);
@@ -84,28 +92,28 @@ const LoginScreen = ({ setIsInLogin }: LoginScreenProps) => {
         placeholderTextColor={colorsApp.red}
         style={styles.inputs}
         onChangeText={handleChangeUsuario}
-      ></TextInput>
+      />
       <TextInput
         placeholder="PASSWORD"
         secureTextEntry
         placeholderTextColor={colorsApp.red}
         style={styles.inputs}
         onChangeText={handleChangePassword}
-      ></TextInput>
+      />
 
       <Pressable
         style={styles.button}
-        accessibilityLabel="Buton para al usuario"
-        onPress={() => handleLogin()}
+        accessibilityLabel="Button for login"
+        onPress={handleLogin}
       >
-        <Text style={styles.butonText}>LOGIN</Text>
+        <Text style={styles.buttonText}>LOGIN</Text>
       </Pressable>
 
       <View style={styles.rowButtons}>
         <Pressable
           style={styles.registerLink}
-          accessibilityLabel="Buton para al usuario"
-          onPress={() => goToRegister()}
+          accessibilityLabel="Button for register"
+          onPress={goToRegister}
         >
           <Text style={styles.registerText}>
             new here? <Text style={styles.registerPhrase}>Register!</Text>
@@ -113,6 +121,7 @@ const LoginScreen = ({ setIsInLogin }: LoginScreenProps) => {
         </Pressable>
         <Text style={styles.passwordForgot}>Forgot Password?</Text>
       </View>
+
       <Modal visible={isModalVisible} transparent={true}>
         <View style={styles.containerAlert}>
           <View style={styles.alert}>
@@ -184,7 +193,7 @@ const styles = StyleSheet.create({
     alignContent: "center",
     flexDirection: "row",
   },
-  butonText: {
+  buttonText: {
     fontSize: 20,
     color: colorsApp.white,
   },
