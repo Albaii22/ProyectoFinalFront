@@ -9,7 +9,7 @@ import {
 import React, { useContext, useState } from "react";
 import { colorsApp } from "../assets/colors/colorsApp";
 import { RenderCardListContext } from "../contexts/LoginContext";
-import { LoginUser } from "../services/userService";
+import AuthService from "../services/userService";
 import { useNavigation } from "@react-navigation/native";
 
 type LoginScreenProps = {
@@ -43,14 +43,15 @@ const LoginScreen = ({ setIsInLogin }: LoginScreenProps) => {
 
   const handleLogin = async () => {
     let user = {
-      name: inputUsuario,
+      username: inputUsuario,
+      email: "",
       password: inputPassword,
     };
-    let codUser = await LoginUser(user);
+    let codUser = await AuthService.login(user);
     if (codUser == 200) {
-      setUserName(user.name);
+      setUserName(user.username);
       setAlertMessage("Login successful");
-      setAlertBody("User " + user.name + " successfully logged in");
+      setAlertBody("User " + user.username + " successfully logged in");
       toggleModal();
       setTimeout(() => {
         toggleIsListRendered();

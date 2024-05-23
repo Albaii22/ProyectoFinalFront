@@ -8,9 +8,8 @@ import {
 } from "react-native";
 import React, { useContext, useState } from "react";
 import { colorsApp } from "../assets/colors/colorsApp";
-import users from "../interfaces/users";
 import { RenderCardListContext } from "../contexts/LoginContext";
-import { registerUser } from "../services/userService";
+import AuthService from "../services/userService";
 
 type RegisterScreenProps = {
   setIsInLogin: Function;
@@ -37,7 +36,7 @@ const RegisterScreen = ({ setIsInLogin }: RegisterScreenProps) => {
 
   const handleRegister = async () => {
     let usuario = {
-      name: inputUsuario,
+      username: inputUsuario,
       email: inputEmail,
       password: inputPassword,
     };
@@ -46,13 +45,26 @@ const RegisterScreen = ({ setIsInLogin }: RegisterScreenProps) => {
       return Alert.alert("Error", "Hay campos vacios");
     }
 
-    if ((await registerUser(usuario)).codigoSalida == 201) {
-      registerUser(usuario);
-      toggleIsListRendered();
-      setUserName(usuario.name);
-    } else {
-      let codError = (await registerUser(usuario)).codigoSalida;
-      Alert.alert(codError.toString(), "Faltan datos o hay datos incorrectos");
+    try {
+      console.log("enters 1");
+      const result = await AuthService.register(usuario);
+      console.log("enters 2");
+
+      if (result.codigoSalida === 200) {
+        console.log("entro");
+
+        AuthService.register(usuario);
+        toggleIsListRendered();
+        setUserName(usuario.username);
+      } else {
+        let codError = (await AuthService.register(usuario)).codigoSalida;
+        Alert.alert(
+          codError.toString(),
+          "Faltan datos o hay datos incorrectos"
+        );
+      }
+    } catch (err) {
+      console.log(err);
     }
   };
 

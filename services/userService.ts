@@ -1,53 +1,38 @@
-const USERS_API_URL = "http://172.16.102.56:8888/users";
-const REGISTER_PATH = "/register";
+import axios from "axios";
+import { interfaceUsers } from "../interfaces/users";
+
+const USERS_API_URL = "http://localhost:8082/auth";
 const LOGIN_PATH = "/login";
+const REGISTER_PATH = "/register";
 
-type UserJsonResponse = {
-  id: number;
-  name: string;
-  email: string;
-  hashedPwd: string;
+const AuthService = {
+  login: async (form: interfaceUsers) => {
+    const requestUrl = `${USERS_API_URL}${LOGIN_PATH}`;
+    try {
+      const response = await axios.post(requestUrl, form, {
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+      });
+      return response.data;
+    } catch (error) {
+      console.error("Error logging in:", error);
+      throw error;
+    }
+  },
+
+  register: async (form: interfaceUsers) => {
+    const requestUrl = `${USERS_API_URL}${REGISTER_PATH}`;
+    console.log(form);
+    try {
+      const response = await axios.post(requestUrl, form);
+      return response.data;
+    } catch (error) {
+      console.error("Error registering:", error);
+      throw error;
+    }
+  },
 };
 
-type CookieUserJson = {
-  username: string;
-  codigoSalida: number;
-};
-
-const getInitRequest = (httpVerb: string, body: {}): RequestInit => {
-  const init: RequestInit = {
-    method: httpVerb,
-    headers: {
-      Accept: "application/json",
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(body),
-  };
-  return init;
-};
-
-export const registerUser = async (user: {}): Promise<CookieUserJson> => {
-  let cookieUsuario = {
-    username: "",
-    codigoSalida: 0,
-  };
-
-  const request: RequestInfo = `${USERS_API_URL}${REGISTER_PATH}`;
-  const response = await fetch(request, getInitRequest("POST", user));
-  const json: UserJsonResponse = await response.json();
-
-  cookieUsuario.codigoSalida = response.status;
-  if (json != null) {
-    cookieUsuario.username = json.name;
-  }
-
-  return cookieUsuario;
-};
-
-export const LoginUser = async (user: {}): Promise<number> => {
-  const request: RequestInfo = `${USERS_API_URL}${LOGIN_PATH}`;
-  const response = await fetch(request, getInitRequest("POST", user));
-  const json: UserJsonResponse = await response.json();
-
-  return response.status;
-};
+export default AuthService;

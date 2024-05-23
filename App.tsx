@@ -1,7 +1,6 @@
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, Text, View } from "react-native";
 import { NavigationContainer, Theme } from "@react-navigation/native";
-import Header from "./components/Header";
 import Drawer from "./components/Drawer";
 import React from "react";
 import { LoginChecker } from "./providers/LoginChecker";
