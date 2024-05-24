@@ -18,7 +18,7 @@ import {
 } from "../services/userDataService";
 
 const Profile = () => {
-  let { userName } = React.useContext(RenderCardListContext);
+  let { userName, themeMode } = React.useContext(RenderCardListContext);
   const [text, setText] = useState("");
   const [actualMsg, setActualMsg] = useState("");
   const [alertMessage, setAlertMessage] = useState("");
@@ -71,11 +71,11 @@ const Profile = () => {
     }
   };
 
-  return (
-    <View style={styles.container}>
+  return !themeMode ? (
+    <View style={styles.containerDark}>
       <Image
         source={require("../assets/def-pfp.jpg")}
-        style={styles.picture}
+        style={styles.pictureDark}
       ></Image>
       <Text style={styles.name}>{userName}</Text>
       <View style={styles.containerAboutMe}>
@@ -90,7 +90,7 @@ const Profile = () => {
               numberOfLines={4}
               onChangeText={(aboutMeMsg) => setText(aboutMeMsg)}
             />
-            
+
             <Pressable
               style={styles.button}
               accessibilityLabel="Buton para editar la info del usuario"
@@ -137,25 +137,107 @@ const Profile = () => {
         </View>
       </Modal>
     </View>
+  ) : (
+    <View style={styles.containerLight}>
+      <Image
+        source={require("../assets/def-pfp.jpg")}
+        style={styles.pictureLight}
+      ></Image>
+      <Text style={styles.name}>{userName}</Text>
+      <View style={styles.containerAboutMe}>
+        <Text style={styles.aboutMeLight}>About me:</Text>
+        {isEditActive ? (
+          <View style={styles.containerEdit}>
+            <TextInput
+              style={styles.textAreaLight}
+              placeholder={actualMsg}
+              placeholderTextColor="black"
+              multiline={true}
+              numberOfLines={4}
+              onChangeText={(aboutMeMsg) => setText(aboutMeMsg)}
+            />
+
+            <Pressable
+              style={styles.button}
+              accessibilityLabel="Buton para editar la info del usuario"
+              onPress={() => saveData()}
+            >
+              <Text style={styles.butonText}>Confirm changes</Text>
+            </Pressable>
+            <Pressable
+              style={styles.buttonLogOff}
+              accessibilityLabel="Buton para deslogearse al usuario"
+              onPress={logOff}
+            >
+              <Text style={styles.butonText}>LOG OFF</Text>
+            </Pressable>
+          </View>
+        ) : (
+          <View style={styles.containerEdit}>
+            <Text style={styles.textAreaLight} numberOfLines={4}>
+              {actualMsg}
+            </Text>
+            <Pressable
+              style={styles.button}
+              accessibilityLabel="Buton para editar la info del usuario"
+              onPress={() => toggleEdit()}
+            >
+              <Text style={styles.butonText}>Edit info</Text>
+            </Pressable>
+            <Pressable
+              style={styles.buttonLogOff}
+              accessibilityLabel="Buton para deslogearse al usuario"
+              onPress={logOff}
+            >
+              <Text style={styles.butonText}>LOG OFF</Text>
+            </Pressable>
+          </View>
+        )}
+      </View>
+      <Modal visible={isModalVisible} transparent={true}>
+        <View style={styles.containerAlert}>
+          <View style={styles.alert}>
+            <Text style={styles.alertHeader}>{alertMessage}</Text>
+            <Text style={styles.alertBody}>{alertBody}</Text>
+          </View>
+        </View>
+      </Modal>
+    </View>
   );
 };
 export default Profile;
 
 const styles = StyleSheet.create({
-  picture: {
+  pictureDark: {
     objectFit: "scale-down",
     width: "30%",
     height: "17%",
-    borderRadius: 100,
+    marginTop: "3%",
+    borderRadius: 120,
+  },
+  pictureLight: {
+    objectFit: "scale-down",
+    width: "30%",
+    height: "17%",
+    marginTop: "3%",
+    borderRadius: 120,
+    border: `2px solid ${colorsApp.black}`,
   },
   containerAboutMe: {
     height: "90%",
     alignItems: "center",
   },
-  container: {
+  containerDark: {
     alignItems: "center",
     justifyContent: "flex-start",
     backgroundColor: colorsApp.black,
+    flex: 1,
+    paddingTop: "2%",
+  },
+  containerLight: {
+    alignItems: "center",
+    justifyContent: "flex-start",
+    backgroundColor: colorsApp.white,
     flex: 1,
     paddingTop: "2%",
   },
@@ -172,15 +254,32 @@ const styles = StyleSheet.create({
     height: "35%",
     width: 320,
     padding: 10,
-    borderColor: "gray",
+    borderColor: colorsApp.light_gray,
     borderWidth: 1,
     borderRadius: 15,
     textAlignVertical: "top",
     marginBottom: "15%",
     backgroundColor: colorsApp.white,
   },
+  textAreaLight: {
+    height: "35%",
+    width: 320,
+    padding: 10,
+    borderColor: colorsApp.black,
+    color: colorsApp.white,
+    borderWidth: 1,
+    borderRadius: 15,
+    textAlignVertical: "top",
+    marginBottom: "15%",
+    backgroundColor: colorsApp.black,
+  },
   aboutMe: {
     color: colorsApp.white,
+    marginBottom: "2%",
+    right: "38%",
+  },
+  aboutMeLight: {
+    color: colorsApp.black,
     marginBottom: "2%",
     right: "38%",
   },

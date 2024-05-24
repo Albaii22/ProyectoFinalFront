@@ -13,6 +13,7 @@ export const LoginChecker = (props: LoginCheckerProps) => {
 
   const [isListRendered, setIsListRendered] = React.useState(false);
   const [userName, setUserName] = React.useState("");
+  const [themeMode, setThemeMode] = React.useState(false);
 
   const toggleIsListRendered = (list: boolean) =>
     setIsListRendered(!isListRendered);
@@ -22,6 +23,8 @@ export const LoginChecker = (props: LoginCheckerProps) => {
     toggleIsListRendered,
     userName,
     setUserName,
+    themeMode,
+    setThemeMode,
   };
 
   return (

@@ -5,6 +5,8 @@ type RenderCardListContextType = {
   toggleIsListRendered: Function;
   userName: string;
   setUserName: Function;
+  themeMode: boolean;
+  setThemeMode: Function;
 };
 
 const RenderCardListContext = React.createContext(

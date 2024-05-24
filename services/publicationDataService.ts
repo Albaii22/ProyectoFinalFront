@@ -1,4 +1,5 @@
 import axios from "axios";
+import { PublicationsDTO } from "../interfaces/publicationDto";
 
 const api = axios.create({
   baseURL: "http://localhost:8082/api/publications",
