@@ -30,13 +30,19 @@ const HomeScreen = () => {
     [key: number]: string;
   }>({});
   const [currentUserId, setCurrentUserId] = useState<number>(0);
+  const [currentPublicationId, setCurrentPublicationId] = useState(0)
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
-  const [isModalVisible, setIsModalVisible] = useState(false);
-  const [updatedComment, setUpdatedComment] = useState("");
+  const [isEditModalVisible, setIsEditModalVisible] = useState(false);
+  const [isAddModalVisible, setIsAddModalVisible] = useState(false);
+  const [updatedPostInfo, setUpdatedPostInfo] = useState("");
+  const [newPost, setNewPost] = useState("");
 
-  const toggleEditModal = () => {
-    setIsModalVisible(!isModalVisible);
+
+  const toggleEditModal = (id: number) => {
+    setIsEditModalVisible(!isEditModalVisible);
+
+    setCurrentPublicationId( id)
   };
 
   useEffect(() => {
@@ -71,8 +77,8 @@ const HomeScreen = () => {
     setPublicationUsernames(usernames);
   };
 
-  const showNewPostModal = () => {
-    // Implementar la lógica para mostrar el modal de nueva publicación
+  const toggleNewPostModal = () => {
+    setIsAddModalVisible(!isAddModalVisible)
   };
 
   const showCommentModal = (publication: PublicationsDTO) => {
@@ -89,6 +95,7 @@ const HomeScreen = () => {
       // comments: [],
     };
 
+    toggleNewPostModal()
     try {
       const response = await createPublication(currentUserId, newPublication);
       setPublications([response, ...publications]);
@@ -125,24 +132,27 @@ const HomeScreen = () => {
     }
   };
 
-  const handleOnChangeUpdate = (comment: string) => {
-    setUpdatedComment(comment);
+  const handleOnChangeUpdate = (post: string) => {
+    setUpdatedPostInfo(post);
   };
 
-  const editPublicationHandler = async (publicationId: number) => {
+  const handleOnChangeAdd = (post: string) => {
+    setNewPost(post);
+  }
+
+  const editPublicationHandler = async () => {
     const updatedPublication = {
-      ...publications.find((pub) => pub.id === publicationId),
-      content: updatedComment,
+      ...publications.find((pub) => pub.id === currentPublicationId),
+      content: updatedPostInfo,
     } as PublicationsDTO;
 
     try {
-      await updatePublication(publicationId, updatedPublication);
+      await updatePublication(currentPublicationId, updatedPublication);
       setPublications(
         publications.map((pub) =>
-          pub.id === publicationId ? updatedPublication : pub
+          pub.id === currentPublicationId ? updatedPublication : pub
         )
       );
-      toggleEditModal();
     } catch (err) {
       console.error("Error updating publication:", err);
     }
@@ -193,7 +203,7 @@ const HomeScreen = () => {
       style={styles.container}
       contentContainerStyle={styles.contentContainer}
     >
-      <Pressable style={styles.addPostBtn} onPress={showNewPostModal}>
+      <Pressable style={styles.addPostBtn} onPress={toggleNewPostModal}>
         <Text style={styles.addPostbtnText}>New Post</Text>
       </Pressable>
       {publications.map((publication) => (
@@ -205,7 +215,33 @@ const HomeScreen = () => {
           <Text style={styles.timePublished}>
             {getTimeSince(publication.timestamp)}
           </Text>
-
+          <Modal visible={isEditModalVisible} transparent={true}>
+            <View style={styles.containerAlert}>
+              <View style={styles.alert}>
+                <Text style={styles.alertHeader}>Introduce the changes</Text>
+                <TextInput
+                  multiline={true}
+                  numberOfLines={4} // Esto establece el número de líneas visibles inicialmente
+                  textAlignVertical="top"
+                  style={styles.alertBody}
+                  onChangeText={handleOnChangeUpdate}
+                  value={updatedPostInfo}
+                ></TextInput>
+                <Pressable
+                  style={styles.alertBtn}
+                  onPress={() => editPublicationHandler()}
+                >
+                  <Text style={styles.btnText}>{publication.id}</Text>
+                </Pressable>
+                <Pressable
+                  style={styles.alertBtn}
+                  onPress={() => toggleEditModal(publication.id)}
+                >
+                  <Text style={styles.btnText}>Cancel</Text>
+                </Pressable>
+              </View>
+            </View>
+          </Modal>
           {currentUserId == publication.user_id ? (
             <View style={styles.rowBtns}>
               <Pressable
@@ -216,7 +252,7 @@ const HomeScreen = () => {
               </Pressable>
               <Pressable
                 style={styles.functionBtn}
-                onPress={() => toggleEditModal()}
+                onPress={() => toggleEditModal(publication.id)}
               >
                 <Text style={styles.btnFunctionText}>Edit</Text>
               </Pressable>
@@ -235,27 +271,28 @@ const HomeScreen = () => {
               <Text style={styles.btnFunctionText}>Comment</Text>
             </Pressable>
           )}
-          <Modal visible={isModalVisible} transparent={true}>
+          
+          <Modal visible={isAddModalVisible} transparent={true}>
             <View style={styles.containerAlert}>
               <View style={styles.alert}>
-                <Text style={styles.alertHeader}>Introduce the changes</Text>
+                <Text style={styles.alertHeader}>What are you thinking...?</Text>
                 <TextInput
                   multiline={true}
                   numberOfLines={4} // Esto establece el número de líneas visibles inicialmente
                   textAlignVertical="top"
                   style={styles.alertBody}
-                  onChangeText={handleOnChangeUpdate}
-                  value={updatedComment}
+                  onChangeText={handleOnChangeAdd}
+                  value={newPost}
                 ></TextInput>
                 <Pressable
                   style={styles.alertBtn}
-                  onPress={() => editPublicationHandler(publication.id)}
+                  onPress={() => createPublicationHandler(newPost)}
                 >
-                  <Text style={styles.btnText}>Save Changes</Text>
+                  <Text style={styles.btnText}>Post</Text>
                 </Pressable>
                 <Pressable
                   style={styles.alertBtn}
-                  onPress={() => toggleEditModal()}
+                  onPress={() => toggleNewPostModal()}
                 >
                   <Text style={styles.btnText}>Cancel</Text>
                 </Pressable>
@@ -356,7 +393,6 @@ const styles = StyleSheet.create({
     height: "10%",
     marginTop: "3%",
     borderRadius: 10,
-    paddingVertical: 6,
     backgroundColor: colorsApp.pink,
     marginHorizontal: "4%",
     alignItems: "center",

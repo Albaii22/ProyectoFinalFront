@@ -90,14 +90,7 @@ const Profile = () => {
               numberOfLines={4}
               onChangeText={(aboutMeMsg) => setText(aboutMeMsg)}
             />
-            <View style={styles.birthdayContainer}>
-              <Text style={styles.birthdayText}>Birthday: </Text>
-              <TextInput
-                style={styles.birthday}
-                placeholder="DD/MM/YYYY"
-                placeholderTextColor={colorsApp.white}
-              />
-            </View>
+            
             <Pressable
               style={styles.button}
               accessibilityLabel="Buton para editar la info del usuario"
@@ -213,22 +206,6 @@ const styles = StyleSheet.create({
     height: 50,
     alignSelf: "center",
     alignItems: "center",
-  },
-  birthdayContainer: {
-    flexDirection: "row",
-    width: "100%",
-    alignItems: "center",
-    alignContent: "space-between",
-  },
-  birthdayText: {
-    color: colorsApp.white,
-    marginRight: "19%",
-    fontSize: 20,
-  },
-  birthday: {
-    marginLeft: "12%",
-    color: colorsApp.white,
-    fontSize: 20,
   },
   containerAlert: {
     marginTop: "90%",
