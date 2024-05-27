@@ -54,8 +54,6 @@ const RegisterScreen = ({ setIsInLogin }: RegisterScreenProps) => {
       console.log("enters 2");
 
       if (result.codigoSalida === 200) {
-        console.log("entro");
-
         setAlertMessage("User created!");
         setAlertBody("User " + user.username + " must logIn now");
         toggleModal();
