@@ -243,7 +243,7 @@ const HomeScreen = () => {
     );
   };
 
-  return themeMode ? (
+  return !themeMode ? (
     <ScrollView
       style={styles.containerDark}
       contentContainerStyle={styles.contentContainer}
